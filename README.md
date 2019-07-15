@@ -3,7 +3,7 @@ RPM Rev lights using Adruino and WS2812 LED Strip.
 
 Games can send telemetry data via UDP Ports. Nodejs Server extracts the details such as idleRPM, currentRPM and maxRPM from the UDP Packets and sends the count of the LEDs to be lighted via Serial Port. Adruino receives the LED count and lights up the LEDS.
 
-![Rpm Rev](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+![Rpm Rev](https://github.com/Rajavn6789/adruino-rpm-rev-lights/blob/master/assets/rpm_rev_lights.gif)
 
 #### Hardware Required
 1. Adruino
