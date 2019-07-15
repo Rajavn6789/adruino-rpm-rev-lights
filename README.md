@@ -5,33 +5,45 @@ Games can send telemetry data via UDP Ports. Nodejs server extracts the details 
 
 ![Rpm Rev](https://github.com/Rajavn6789/adruino-rpm-rev-lights/blob/master/assets/rpm_rev_lights.gif)
 
-
-### Steps
-1. Clone the Repo
-```
-git clone repo_url
-```
-
-2. Replace .env file with the udp server and port
-```
-GAME_UDP_SERVER_IP='192.168.1.5'
-GAME_UDP_SERVER_PORT=20777
-ADRUINO_SERIAL_PORT='/dev/cu.usbmodem1421'
-```
-
-3. Install dependecies
-```
-npm install
-```
-
-4. Start the node server
-```
-npm start
-```
-
 ### Hardware Required
 1. Adruino
 2. WS2812 LED Strip (x2)
+
+### Steps
+
+1. Solder the WS2812 LED Strip together and connect it to Adruino
+    ```
+    DIN - D7 of Adruino
+    5V - 5V OF Adruino
+    GND (x2) - Any GND Pin in Adruino
+    ```
+    > WS2812 LED Strip can be connected in chain.
+    > If using more than two use external 5v power supply or you will end up in frying the adruino.
+
+2. Upload the sketch inside adruino folder to the AdruinoIDE and flash the sketch into the adruino
+    > Install FastLED library before flashing
+
+3. Clone the Repo
+    ```sh
+    $ git clone https://github.com/Rajavn6789/adruino-rpm-rev-lights.git
+   ```
+
+3. Replace .env file with the udp server, port
+    ```
+    GAME_UDP_SERVER_IP='127.0.0.1'
+    GAME_UDP_SERVER_PORT=20777
+    ADRUINO_SERIAL_PORT='COM6'
+    ```
+
+4. Install dependecies
+    ```sh
+    $ npm install
+    ```
+
+5. Start the node server
+    ```sh
+    $ npm start
+    ```
 
 ### Supported Games
 1. Dirt Rally (v1)
