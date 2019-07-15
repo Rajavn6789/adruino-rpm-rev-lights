@@ -1,9 +1,12 @@
 const dgram = require('dgram');
 const SerialPort = require("serialport");
+const dotenv = require('dotenv');
 
+// Intialize dotenv
+dotenv.config();
 
 // 1. Initialize a Serial connection with adruino serial port
-const arduinoCOMPort = "/dev/cu.usbmodem1421";
+const arduinoCOMPort = process.env.ADRUINO_SERIAL_PORT || 'COM1';
 const arduinoSerialPort = new SerialPort(arduinoCOMPort, {
   baudRate: 9600,
 });
@@ -23,8 +26,8 @@ arduinoSerialPort.on('error', (err) => {
 // 2. Initialize a UDP server listening to port 20777
 const udpServer = dgram.createSocket('udp4');
 udpServer.bind({
-  address: '192.168.1.5',
-  port: 20777,
+  address: process.env.GAME_UDP_SERVER_IP || '127.0.0.1',
+  port: process.env.GAME_UDP_SERVER_PORT || 20777,
 });
 
 udpServer.on('listening', () => {
