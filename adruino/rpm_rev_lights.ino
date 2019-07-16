@@ -4,7 +4,7 @@
 # define LED_TYPE WS2812
 # define COLOR_ORDER GRB
 # define NUM_LEDS 16
-# define BRIGHTNESS 30
+# define BRIGHTNESS 50
 
 // Define the array of leds
 CRGB leds[NUM_LEDS];
@@ -20,7 +20,7 @@ DEFINE_GRADIENT_PALETTE( rpm_palatte) {
 
   // Initial Setup of Adruino
   void setup() {
-    delay(3000); // 3 second delay for recovery
+    delay(2000);
 
     // Serial setup
     Serial.begin(9600);
@@ -29,32 +29,35 @@ DEFINE_GRADIENT_PALETTE( rpm_palatte) {
     // FastLED setup
     FastLED.addLeds < LED_TYPE, DATA_PIN, COLOR_ORDER > (leds, NUM_LEDS);
     FastLED.setBrightness(BRIGHTNESS);
+
+    // Turn off
     BlackoutStrip();
   }
 
   // Initialize variables
   int prevLedCount;
   String incoming;
-  CRGBPalette16 rpmColourPalette = rpm_palatte;
   unsigned long previousMillis = 0;
   unsigned long currentMillis;
-
+  CRGBPalette16 rpmColourPalette = rpm_palatte;
 
   void loop() {
     currentMillis = millis();
-    // If no data available for 1s Turn off strip
-    if (currentMillis - previousMillis >= 1000) {
+
+    // Turn off if no activity for 3s
+    if (currentMillis - previousMillis >= 3000) {
       BlackoutStrip();
     }
     if (Serial.available() > 0) {
-      previousMillis = currentMillis; // restarts the countdown
-      
-      // Read Serial data
       incoming = Serial.readString();
       int numLeds = incoming.toInt();
 
-      // Range check
-      if (numLeds >= 1 && numLeds <= NUM_LEDS) {
+      previousMillis = currentMillis; // reset
+
+      // Max Rpm blink LEDs
+      if(numLeds == NUM_LEDS){
+        BlinkLeds(numLeds);
+      } else if (numLeds >= 1 && numLeds < NUM_LEDS) {
         if(prevLedCount > numLeds) {
           TurnOffLeds(prevLedCount, numLeds);
         } else {
@@ -79,6 +82,16 @@ DEFINE_GRADIENT_PALETTE( rpm_palatte) {
       gradientindex = gradientindex + 16;
       FastLED.show();
     }
+  }
+
+  /*
+  Blink LEDs
+  */
+  void BlinkLeds(int numLeds){
+    TurnOnLeds(numLeds);
+    delay(10);
+    BlackoutStrip();
+    delay(10);
   }
 
   /*
