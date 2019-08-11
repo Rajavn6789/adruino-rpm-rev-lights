@@ -1,26 +1,26 @@
 #include <FastLED.h>
 
-# define DATA_PIN 7
+# define DATA_PIN 4
 # define LED_TYPE WS2812
 # define COLOR_ORDER GRB
-# define NUM_LEDS 16
-# define BRIGHTNESS 50
+# define NUM_LEDS 24
+# define BRIGHTNESS 30
 
 // Define the array of leds
 CRGB leds[NUM_LEDS];
 
-// Define Gradient (0-79 => green, 79-160 => blue, 160-255 => red)
+// Define Gradient (0-85 => green, 85-170 => blue, 170-255 => red)
 DEFINE_GRADIENT_PALETTE( rpm_palatte) {
   0,   85,  170,  0,  // green
-  79,   85,  170,  0,  // green
-  79, 0, 0, 255,  // blue
-  160, 0, 0, 255,  // blue
-  160, 255,  0,  0, // red
+  85,   85,  170,  0,  // green
+  85, 0, 0, 255,  // blue
+  170, 0, 0, 255,  // blue
+  170, 255,  0,  0, // red
   255, 255,  0,  0 }; // red
 
   // Initial Setup of Adruino
   void setup() {
-    delay(2000);
+    delay(3000);
 
     // Serial setup
     Serial.begin(9600);
@@ -42,15 +42,19 @@ DEFINE_GRADIENT_PALETTE( rpm_palatte) {
   CRGBPalette16 rpmColourPalette = rpm_palatte;
 
   void loop() {
+  
     currentMillis = millis();
 
     // Turn off if no activity for 3s
     if (currentMillis - previousMillis >= 3000) {
       BlackoutStrip();
     }
+    
     if (Serial.available() > 0) {
       incoming = Serial.readString();
-      int numLeds = incoming.toInt();
+      int posColon = incoming.indexOf(':');
+      String ledString = incoming.substring(0, posColon);
+      int numLeds = ledString.toInt();
 
       previousMillis = currentMillis; // reset
 
@@ -76,10 +80,10 @@ DEFINE_GRADIENT_PALETTE( rpm_palatte) {
   Turn on leds in forward direction
   */
   void TurnOnLeds(int numLeds){
-    uint8_t gradientindex = 0;
+    float gradientindex = 0;
     for(int i = 0; i < numLeds; i++){
       leds[i] = ColorFromPalette( rpmColourPalette, gradientindex);
-      gradientindex = gradientindex + 16;
+      gradientindex = gradientindex + 10.6;
       FastLED.show();
     }
   }
